@@ -1,20 +1,14 @@
 export interface ProcessEnvironments {
-    NODE_ENV: 'development' | 'test' | 'staging' | 'production'
-    APP_HOST: string;
-    APP_PORT: number;
-    LOG_LEVEL: 'error' | 'debug' | 'log' | 'warn' | 'verbose' | 'info';
+  NODE_ENV: 'development' | 'test' | 'staging' | 'production';
 
-    POSTGRES_ENDPOINT: string;
-    POSTGRES_PORT: number;
-    POSTGRES_DATABASE_NAME:string;
-    POSTGRES_USER:string;
-    POSTGRES_PASSWORD:string;
+  APP_HOST: string;
+  APP_PORT: number;
 
-    MONGO_PORT:number;
-    MONGO_USER:string;
-    MONGO_PASSWORD:string;
+  LOG_LEVEL: 'error' | 'debug' | 'log' | 'warn' | 'verbose' | 'info';
+
+  CORS_WHITELIST: string;
 }
 
 declare namespace NodeJS {
-    type ProcessEnv = ProcessEnvironments;
+  type ProcessEnv = ProcessEnvironments;
 }

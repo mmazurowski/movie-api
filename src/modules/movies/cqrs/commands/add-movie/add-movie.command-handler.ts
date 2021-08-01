@@ -35,8 +35,6 @@ export class AddMovieCommandHandler extends CommandHandler<AddMovieCommand> {
       throw new GenreNotSupportedError('Genre not supported', 422);
     }
 
-    // check if already exist
-
     const movie = await moviesRepository.addMovie({
       ...rest,
       genres,

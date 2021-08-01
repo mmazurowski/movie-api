@@ -11,8 +11,12 @@ import compression from 'compression';
 
 export class PrepareServerProcedure extends Procedure<AwilixContainer, AwilixContainer> {
   async run(container: AwilixContainer): Promise<AwilixContainer> {
+    const WHITE_LIST: string[] | RegExp[] = process.env.CORS_WHITELIST
+      ? process.env.CORS_WHITELIST.split(' ')
+      : [];
+
     const corsOptions = {
-      origin: [],
+      origin: process.env.NODE_ENV === 'production' ? WHITE_LIST : [/localhost/],
       credentials: true,
     };
 
