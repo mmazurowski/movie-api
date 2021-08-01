@@ -9,12 +9,15 @@ infrastructure
 database
 readme.md
 dist
+.cache
+.husky
 
 # dependencies
 node_modules
 
 # Environment variablesls
 .env
+.env.example
 
 # Dev runtime and tests
 nodemon.json

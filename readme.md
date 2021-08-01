@@ -3,9 +3,11 @@
 ![Lint Check](https://github.com/mmazurowski/movie-api/workflows/Lint%20Check/badge.svg)
 
 # TSH <> Marcin - Welcome Project
+
 > Hi, My name is Marcin and I would like to present you my piece of code.
 
 ## Installing / Getting started
+
 ```
 Requirements
 1. Node 14
@@ -14,15 +16,17 @@ Requirements
 ```
 
 ## Developing
+
 Application by default listens on localhost port 4000, this can be easily altered based on environmental variables
 
 ```
-git clone https://
+git clone git@github.com:mmazurowski/movie-api.git
 npm run i
 npm run dev
 ```
 
 ## Configuration
+
 Make sure you're keeping you environmental variables up to date
 
 ```
@@ -35,10 +39,10 @@ APP_HOST=http://localhost
 
 ## Building
 
-Building application 
-``npm run build``  
-You can build docker with following command:  `docker build -t tsh:latest .`
-
+Building application
+`npm run build`  
+You can build docker with following command: `docker build -t tsh:latest .`
 
 ## Running
+
 Running container `docker run -v $(pwd)/database:/home/app/database -p 4000:4000 -e NODE_ENV=production tsh:latest`
