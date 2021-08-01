@@ -6,11 +6,11 @@ import { SUPPORTED_HTTP_METHODS } from '@application/server/rest/decorators/http
  */
 
 export const extractMetaData = (instance: object) => {
-    const methodsBoundedByDecorator: Array<[string, []]> = [];
+  const methodsBoundedByDecorator: Array<[string, []]> = [];
 
-    SUPPORTED_HTTP_METHODS.forEach((meta) =>
-        methodsBoundedByDecorator.push([meta, Reflect.getMetadata(`__${meta}`, instance)]),
-    );
+  SUPPORTED_HTTP_METHODS.forEach((meta) =>
+    methodsBoundedByDecorator.push([meta, Reflect.getMetadata(`__${meta}`, instance)]),
+  );
 
-    return methodsBoundedByDecorator;
+  return methodsBoundedByDecorator;
 };

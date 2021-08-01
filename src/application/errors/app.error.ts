@@ -1,9 +1,9 @@
 export class AppError extends Error {
-    name = 'AppError';
+  name = 'AppError';
 
-    constructor(public readonly message: string, public readonly code?: number) {
-        super(message);
+  constructor(public readonly message: string, public readonly code?: number) {
+    super(message);
 
-        Error.captureStackTrace(AppError);
-    }
+    Error.captureStackTrace(AppError);
+  }
 }

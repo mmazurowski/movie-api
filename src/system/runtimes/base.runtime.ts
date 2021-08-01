@@ -7,11 +7,11 @@ import { PrepareServerProcedure } from '@system/procedures/prepare-server.proced
 import { HandleExitProcedure } from '@system/procedures/handle-exit.procedure';
 
 const baseRuntime = [
-    new SetupDIContainerProcedure(),
-    new BindSystemCoreDependenciesProcedure(),
-    new HandleExitProcedure(),
-    new RegisterModulesProcedure(),
-    new PrepareServerProcedure(),
+  new SetupDIContainerProcedure(),
+  new BindSystemCoreDependenciesProcedure(),
+  new HandleExitProcedure(),
+  new RegisterModulesProcedure(),
+  new PrepareServerProcedure(),
 ];
 
 export { baseRuntime };

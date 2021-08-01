@@ -1,7 +1,7 @@
 import { AppError } from '@application/errors/app.error';
 
 export class NotFoundError extends AppError {
-    name = 'NotFoundError';
+  name = 'NotFoundError';
 
-    code = 404;
+  code = 404;
 }

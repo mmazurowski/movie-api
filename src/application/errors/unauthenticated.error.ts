@@ -1,7 +1,7 @@
 import { AppError } from '@application/errors/app.error';
 
 export class UnauthenticatedError extends AppError {
-    name = 'UnauthenticatedError';
+  name = 'UnauthenticatedError';
 
-    code = 401;
+  code = 401;
 }
