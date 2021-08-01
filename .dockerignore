@@ -1,0 +1,31 @@
+# IDE files and git
+.idea
+.git
+.gitignore
+
+# Docs, workflows, IAC
+.github
+infrastructure
+database
+readme.md
+dist
+
+# dependencies
+node_modules
+
+# Environment variablesls
+.env
+
+# Dev runtime and tests
+nodemon.json
+jest.config.js
+
+# Linters
+.eslintrc
+.prettierignore
+.prettierrc
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
