@@ -1,7 +1,7 @@
 import { AppError } from '@application/errors/app.error';
 
 export class BusinessRuleError extends AppError {
-    name = 'BusinessRuleValidationError';
+  name = 'BusinessRuleValidationError';
 
-    code = 400;
+  code = 400;
 }

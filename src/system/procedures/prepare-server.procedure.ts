@@ -10,42 +10,52 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import compression from 'compression';
 
 export class PrepareServerProcedure extends Procedure<AwilixContainer, AwilixContainer> {
-    async run(container: AwilixContainer): Promise<AwilixContainer> {
-        const corsOptions = {
-            origin: [],
-            credentials: true,
-        };
+  async run(container: AwilixContainer): Promise<AwilixContainer> {
+    const corsOptions = {
+      origin: [],
+      credentials: true,
+    };
 
-        const expressServer = container.resolve<Application>('server');
+    const expressServer = container.resolve<Application>('server');
 
-        expressServer.use(bodyParser.json());
-        expressServer.use(cors(corsOptions));
-        expressServer.use(compression());
+    expressServer.use(bodyParser.json());
+    expressServer.use(cors(corsOptions));
+    expressServer.use(compression());
 
-        const requestIdMiddleware = container.resolve<RequestHandler>('requestIdMiddleware');
-        expressServer.use(requestIdMiddleware);
+    const requestIdMiddleware = container.resolve<RequestHandler>('requestIdMiddleware');
+    expressServer.use(requestIdMiddleware);
 
-        expressServer.disable('x-powered-by');
+    expressServer.disable('x-powered-by');
 
-        expressServer.use('/docs', serve, setup(swaggerJsdoc({
-            definition: {
-                openapi: '3.0.0',
-                info: {
-                    version: '1.0.0',
-                    title: 'TSH task',
-                },
+    expressServer.use(
+      '/docs',
+      serve,
+      setup(
+        swaggerJsdoc({
+          definition: {
+            openapi: '3.0.0',
+            info: {
+              version: '1.0.0',
+              title: 'TSH task',
             },
-            apis: [process.env.NODE_ENV === 'production' ? 'dist/modules/**/api/rest/**/*.action.js' : 'src/modules/**/api/rest/**/*.action.ts'],
-        })));
+          },
+          apis: [
+            process.env.NODE_ENV === 'production'
+              ? 'dist/modules/**/api/rest/**/*.action.js'
+              : 'src/modules/**/api/rest/**/*.action.ts',
+          ],
+        }),
+      ),
+    );
 
-        const controllers = container.resolve<ExpressController[]>('controllers');
-        controllers.forEach((controller) => expressServer.use(controller.getRouter()));
+    const controllers = container.resolve<ExpressController[]>('controllers');
+    controllers.forEach((controller) => expressServer.use(controller.getRouter()));
 
-        expressServer.use('*', (req, res, next) => next(new NotFoundError('Route not found')));
+    expressServer.use('*', (req, res, next) => next(new NotFoundError('Route not found')));
 
-        const errorMiddleware = container.resolve<RequestHandler>('errorMiddleware');
-        expressServer.use(errorMiddleware);
+    const errorMiddleware = container.resolve<RequestHandler>('errorMiddleware');
+    expressServer.use(errorMiddleware);
 
-        return container;
-    }
+    return container;
+  }
 }
