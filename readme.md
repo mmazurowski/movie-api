@@ -30,9 +30,11 @@ npm run dev
 Make sure you're keeping you environmental variables up to date
 
 ```
-APP_ENV=development
+NODE_ENV=development
+
 APP_PORT=4000
 APP_HOST=http://localhost
+CORS_WHITELIST=
 
 // this could be automated to always reflect .env.example
 ```
