@@ -8,6 +8,7 @@ import {
 
 interface ErrorResponse {
   errorCode: number;
+  message: string;
   name: string;
   translation: string;
   stack: string;
@@ -47,6 +48,7 @@ Dependencies): ErrorRequestHandler => (err, req, res, _) => {
     return res.status(422).json({
       errorCode: 422,
       name: 'ValidationError',
+      message: 'Provided request did not validate properly',
       details: {
         bodyErrors: bodyDetails?.details.map(convertError) || [],
         queryErrors: queryDetails?.details.map(convertError) || [],
@@ -58,6 +60,7 @@ Dependencies): ErrorRequestHandler => (err, req, res, _) => {
   return res.status(Number.isInteger(err.code) ? err.code : 500).json({
     errorCode: err.code || 500,
     name: err.name,
+    message: err.message,
     stack: process.env.NODE_ENV === 'production' || err.code === 404 ? undefined : err.stack,
   } as ErrorResponse);
 };
