@@ -1,3 +1,7 @@
+![Production Build](https://github.com/mmazurowski/movie-api/workflows/Project%20Build/badge.svg)
+![Test](https://github.com/mmazurowski/movie-api/workflows/Test/badge.svg)
+![Lint Check](https://github.com/mmazurowski/movie-api/workflows/Lint%20Check/badge.svg)
+
 # TSH <> Marcin - Welcome Project
 > Hi, My name is Marcin and I would like to present you my piece of code.
 
