@@ -21,7 +21,7 @@ Application by default listens on localhost port 4000, this can be easily altere
 
 ```
 git clone git@github.com:mmazurowski/movie-api.git
-npm run i
+npm i
 npm run dev
 ```
 
