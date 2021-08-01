@@ -16,7 +16,7 @@ FROM node:14-alpine as Executor
 
 WORKDIR /home/app
 
-COPY --from=Builder /home/app/ /home/app/
+COPY --chown=node:node --from=Builder /home/app/ /home/app/
 
 EXPOSE 4000
 

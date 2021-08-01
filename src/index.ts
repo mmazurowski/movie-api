@@ -4,7 +4,7 @@
 require('dotenv').config();
 
 if (process.env.NODE_ENV === 'production') {
-    require('module-alias/register');
+  require('module-alias/register');
 }
 
 import 'reflect-metadata';
@@ -14,5 +14,5 @@ import { serverRuntime } from '@system/runtimes/server.runtime';
 const system = new System();
 
 (async () => {
-    await system.execute(serverRuntime);
+  await system.execute(serverRuntime);
 })();
