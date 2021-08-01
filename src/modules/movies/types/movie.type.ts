@@ -9,6 +9,12 @@ export interface Movie {
   posterUrl: string;
 }
 
-export interface MovieRecord extends Movie {
+export interface MovieType extends Movie {
   id: number;
+}
+
+export interface MovieRecord extends Omit<Movie, 'year' | 'runtime'> {
+  id: number;
+  year: string;
+  runtime: string;
 }

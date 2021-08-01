@@ -5,10 +5,17 @@ import {
 } from '@modules/movies/cqrs/commands/add-movie/add-movie.command';
 import { MoviesRepository } from '@modules/movies/domain/movies.repository';
 import { GenreNotSupportedError } from '@modules/movies/errors/genre-not-supported.error';
-import { MovieRecord } from '@modules/movies/types/movie.type';
+import { MovieType } from '@modules/movies/types/movie.type';
+import {
+  RequestIdAsyncLocalStorage,
+  TRANSACTION_ID_HTTP_HEADER,
+} from '@application/server/rest/middlewares/request-id.middleware';
+import { Logger } from '@application/logger/logger';
 
 interface Dependencies {
   moviesRepository: MoviesRepository;
+  logger: Logger;
+  asyncLocalStorage: RequestIdAsyncLocalStorage;
 }
 
 export class AddMovieCommandHandler extends CommandHandler<AddMovieCommand> {
@@ -16,8 +23,8 @@ export class AddMovieCommandHandler extends CommandHandler<AddMovieCommand> {
     super(ADD_MOVIE_COMMAND);
   }
 
-  public async handle(handleable: AddMovieCommand): Promise<MovieRecord> {
-    const { moviesRepository } = this.dependencies;
+  public async handle(handleable: AddMovieCommand): Promise<MovieType> {
+    const { moviesRepository, logger, asyncLocalStorage } = this.dependencies;
 
     const { actors, plot, posterUrl, genres, ...rest } = handleable.getPayload();
 
@@ -28,12 +35,22 @@ export class AddMovieCommandHandler extends CommandHandler<AddMovieCommand> {
       throw new GenreNotSupportedError('Genre not supported', 422);
     }
 
-    return moviesRepository.addMovie({
+    // check if already exist
+
+    const movie = await moviesRepository.addMovie({
       ...rest,
       genres,
       actors: actors || '',
       plot: plot || '',
       posterUrl: posterUrl || '',
     });
+
+    logger.info(
+      `[Request TransactionID: ${asyncLocalStorage
+        .getStore()
+        .get(TRANSACTION_ID_HTTP_HEADER)}] Created movie ${movie.title}`,
+    );
+
+    return movie;
   }
 }

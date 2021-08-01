@@ -6,7 +6,7 @@ import { AddMovieCommand } from '@modules/movies/cqrs/commands/add-movie/add-mov
 
 /**
  * @swagger
- * /movie:
+ * /v1/movie:
  *   post:
  *     tags:
  *       - Movies
@@ -57,14 +57,14 @@ import { AddMovieCommand } from '@modules/movies/cqrs/commands/add-movie/add-mov
 export const addMovieActionValidation = celebrate(
   {
     [Segments.BODY]: {
-      genres: Joi.array().items(Joi.string()).required(),
-      title: Joi.string().max(255).required(),
+      genres: Joi.array().items(Joi.string().trim()).required(),
+      title: Joi.string().trim().max(255).required(),
       year: Joi.number().required(),
       runtime: Joi.number().required(),
-      director: Joi.string().max(255).required(),
-      actors: Joi.string().optional(),
-      plot: Joi.string().optional(),
-      posterUrl: Joi.string().optional().uri(),
+      director: Joi.string().trim().max(255).required(),
+      actors: Joi.string().trim().optional(),
+      plot: Joi.string().trim().optional(),
+      posterUrl: Joi.string().trim().optional().uri(),
     },
   },
   {

@@ -1,7 +1,8 @@
 import { MoviesRepository } from '@modules/movies/domain/movies.repository';
-import { Movie, MovieRecord } from '@modules/movies/types/movie.type';
+import { Movie, MovieType } from '@modules/movies/types/movie.type';
 import { MoviesSchema } from '@modules/movies/types/schema.type';
 import { FileSystemDatabase } from '@application/filesystem-database/filesystem-database';
+import { MoviesMapper } from '@modules/movies/infrastructure/filesystem-database/movies.mapper';
 
 interface Dependencies {
   fileSystemDatabase: FileSystemDatabase;
@@ -11,7 +12,7 @@ interface Dependencies {
 export class MoviesRepositoryImpl implements MoviesRepository {
   constructor(private readonly dependencies: Dependencies) {}
 
-  public async addMovie(movie: Movie): Promise<MovieRecord> {
+  public async addMovie(movie: Movie): Promise<MovieType> {
     const { fileSystemDatabase, fileSystemMoviesPath } = this.dependencies;
 
     let data = await fileSystemDatabase.select<MoviesSchema>(fileSystemMoviesPath);
@@ -23,16 +24,18 @@ export class MoviesRepositoryImpl implements MoviesRepository {
     const record = {
       id: data.movies.length + 1,
       ...movie,
+      runtime: String(movie.runtime),
+      year: String(movie.year),
     };
 
     data.movies.push(record);
 
     await fileSystemDatabase.update(fileSystemMoviesPath, data);
 
-    return record;
+    return MoviesMapper.toEntity(record);
   }
 
-  public async getRandomMovie(): Promise<MovieRecord> {
+  public async getRandomMovie(): Promise<MovieType> {
     const { fileSystemDatabase, fileSystemMoviesPath } = this.dependencies;
 
     let data = await fileSystemDatabase.select<MoviesSchema>(fileSystemMoviesPath);
@@ -45,10 +48,10 @@ export class MoviesRepositoryImpl implements MoviesRepository {
 
     const randomID = MoviesRepositoryImpl.getRandomID(numberOfMovies);
 
-    return data.movies[randomID];
+    return MoviesMapper.toEntity(data.movies[randomID]);
   }
 
-  public async getRandomMovieByDuration(duration: number): Promise<MovieRecord> {
+  public async getRandomMovieByDuration(duration: number): Promise<MovieType> {
     const { fileSystemDatabase, fileSystemMoviesPath } = this.dependencies;
 
     let data = await fileSystemDatabase.select<MoviesSchema>(fileSystemMoviesPath);
@@ -58,17 +61,17 @@ export class MoviesRepositoryImpl implements MoviesRepository {
     }
 
     const movies = data.movies.filter(
-      (movie) => movie.runtime >= duration - 10 && movie.runtime <= duration + 10,
+      (movie) => Number(movie.runtime) >= duration - 10 && Number(movie.runtime) <= duration + 10,
     );
 
     const numberOfMovies = movies.length;
 
     const randomID = MoviesRepositoryImpl.getRandomID(numberOfMovies);
 
-    return movies[randomID];
+    return movies[randomID] ? MoviesMapper.toEntity(movies[randomID]) : null;
   }
 
-  public async getMoviesByGenres(genres: string[]): Promise<MovieRecord[]> {
+  public async getMoviesByGenres(genres: string[]): Promise<MovieType[]> {
     const { fileSystemDatabase, fileSystemMoviesPath } = this.dependencies;
 
     let data = await fileSystemDatabase.select<MoviesSchema>(fileSystemMoviesPath);
@@ -97,13 +100,13 @@ export class MoviesRepositoryImpl implements MoviesRepository {
       result = [...cache.get(idx + 1), ...result];
     });
 
-    return result;
+    return result.map((el) => MoviesMapper.toEntity(el));
   }
 
   public async getMoviesByGenresAndDuration(
     genres: string[],
     duration: number,
-  ): Promise<MovieRecord[]> {
+  ): Promise<MovieType[]> {
     const { fileSystemDatabase, fileSystemMoviesPath } = this.dependencies;
 
     let data = await fileSystemDatabase.select<MoviesSchema>(fileSystemMoviesPath);

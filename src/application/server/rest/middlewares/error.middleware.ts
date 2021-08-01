@@ -12,6 +12,7 @@ interface ErrorResponse {
   translation: string;
   stack: string;
 }
+
 interface Dependencies {
   logger: Logger;
   asyncLocalStorage: RequestIdAsyncLocalStorage;

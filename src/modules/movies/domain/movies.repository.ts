@@ -1,15 +1,15 @@
-import { Movie, MovieRecord } from '@modules/movies/types/movie.type';
+import { Movie, MovieType } from '@modules/movies/types/movie.type';
 
 export interface MoviesRepository {
-  addMovie(movie: Movie): Promise<MovieRecord>;
+  addMovie(movie: Movie): Promise<MovieType>;
 
   getAvailableMovieGenres(): Promise<Array<string>>;
 
-  getRandomMovie(): Promise<MovieRecord>;
+  getRandomMovie(): Promise<MovieType>;
 
-  getRandomMovieByDuration(duration: number): Promise<MovieRecord>;
+  getRandomMovieByDuration(duration: number): Promise<MovieType>;
 
-  getMoviesByGenres(genres: string[]): Promise<MovieRecord[]>;
+  getMoviesByGenres(genres: string[]): Promise<MovieType[]>;
 
-  getMoviesByGenresAndDuration(genres: string[], duration: number): Promise<MovieRecord[]>;
+  getMoviesByGenresAndDuration(genres: string[], duration: number): Promise<MovieType[]>;
 }
