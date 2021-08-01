@@ -10,9 +10,9 @@
 
 ```
 Requirements
-1. Node 14
-2. Docker
-3. NPM
+1. Node >= 14
+2. Docker >= 20.10.7
+3. NPM >= 7.20.3
 ```
 
 ## Developing
