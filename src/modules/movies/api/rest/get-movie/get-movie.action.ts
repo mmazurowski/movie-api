@@ -9,7 +9,7 @@ import { GetMoviesByGenresAndDurationQuery } from '@modules/movies/cqrs/queries/
 
 /**
  * @swagger
- * /movie:
+ * /v1/movie:
  *   get:
  *     tags:
  *       - Movies
@@ -41,7 +41,7 @@ import { GetMoviesByGenresAndDurationQuery } from '@modules/movies/cqrs/queries/
 export const getMovieActionValidation = celebrate({
   [Segments.QUERY]: {
     duration: Joi.number().optional(),
-    genres: Joi.array().optional(),
+    genres: Joi.alternatives(Joi.array().optional(), Joi.string().optional()),
   },
 });
 
@@ -66,7 +66,13 @@ const getMovieAction = ({ cqrsBus }: Dependencies): RequestHandler => (req, res,
 
   if (!req.query.duration && req.query.genres) {
     cqrsBus
-      .handle(new GetMoviesByGenresQuery({ genres: req.query.genres as string[] }))
+      .handle(
+        new GetMoviesByGenresQuery({
+          genres: Array.isArray(req.query.genres)
+            ? (req.query.genres as string[])
+            : [req.query.genres as string],
+        }),
+      )
       .then((output) => res.json(output))
       .catch(next);
   }
@@ -75,7 +81,9 @@ const getMovieAction = ({ cqrsBus }: Dependencies): RequestHandler => (req, res,
     cqrsBus
       .handle(
         new GetMoviesByGenresAndDurationQuery({
-          genres: req.query.genres as [],
+          genres: Array.isArray(req.query.genres)
+            ? (req.query.genres as string[])
+            : [req.query.genres as string],
           duration: Number(req.query.duration),
         }),
       )

@@ -1,11 +1,18 @@
 import { QueryHandler } from '@lunar-flight-v/command-module';
-import { Movie } from '@modules/movies/types/movie.type';
+import { MovieType } from '@modules/movies/types/movie.type';
 import { GET_MOVIES_BY_GENRES_QUERY, GetMoviesByGenresQuery } from './get-movies-by-genres.query';
 import { MoviesRepository } from '@modules/movies/domain/movies.repository';
 import { GenreNotSupportedError } from '@modules/movies/errors/genre-not-supported.error';
+import {
+  RequestIdAsyncLocalStorage,
+  TRANSACTION_ID_HTTP_HEADER,
+} from '@application/server/rest/middlewares/request-id.middleware';
+import { Logger } from '@application/logger/logger';
 
 interface Dependencies {
   moviesRepository: MoviesRepository;
+  logger: Logger;
+  asyncLocalStorage: RequestIdAsyncLocalStorage;
 }
 
 export class GetMoviesByGenresQueryHandler extends QueryHandler<GetMoviesByGenresQuery> {
@@ -13,9 +20,9 @@ export class GetMoviesByGenresQueryHandler extends QueryHandler<GetMoviesByGenre
     super(GET_MOVIES_BY_GENRES_QUERY);
   }
 
-  async handle(command: GetMoviesByGenresQuery): Promise<Movie[]> {
+  async handle(command: GetMoviesByGenresQuery): Promise<MovieType[]> {
     const { genres } = command.getPayload();
-    const { moviesRepository } = this.dependencies;
+    const { moviesRepository, logger, asyncLocalStorage } = this.dependencies;
 
     const allowedGeneres = await moviesRepository.getAvailableMovieGenres();
 
@@ -23,6 +30,16 @@ export class GetMoviesByGenresQueryHandler extends QueryHandler<GetMoviesByGenre
       throw new GenreNotSupportedError('Genre not supported', 422);
     }
 
-    return moviesRepository.getMoviesByGenres(genres);
+    const movies = await moviesRepository.getMoviesByGenres(genres);
+
+    logger.info(
+      `[Request TransactionID: ${asyncLocalStorage
+        .getStore()
+        .get(TRANSACTION_ID_HTTP_HEADER)}] Requested movies by genres, number of movies returned: ${
+        movies.length
+      }`,
+    );
+
+    return movies;
   }
 }
